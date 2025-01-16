@@ -16,6 +16,8 @@ class SequenceValidationServiceTest :
                     service.validateSequence("ATCG").shouldBeTrue()
                     service.validateSequence("GCTA").shouldBeTrue()
                     service.validateSequence("AAAA").shouldBeTrue()
+                    service.validateSequence("T").shouldBeTrue() // single character
+                    service.validateSequence("ATCGATCGATCG").shouldBeTrue() // repeated pattern
                 }
             }
         }
@@ -27,6 +29,9 @@ class SequenceValidationServiceTest :
                     service.validateSequence("1234").shouldBeFalse()
                     service.validateSequence("ATCG ").shouldBeFalse()
                     service.validateSequence("").shouldBeFalse()
+                    service.validateSequence("ATCG\n").shouldBeFalse() // newline character
+                    service.validateSequence("ATCG\t").shouldBeFalse() // tab character
+                    service.validateSequence("ATCGATCGATCGX").shouldBeFalse() // invalid character at end
                 }
             }
         }
