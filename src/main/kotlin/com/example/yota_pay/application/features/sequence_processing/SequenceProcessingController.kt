@@ -1,7 +1,7 @@
 package com.example.yota_pay.application.features.sequence_processing
 
-import com.example.yota_pay.application.features.sequence_processing.dto.SequenceValidationRequest
-import com.example.yota_pay.application.features.sequence_processing.dto.SequenceValidationResponse
+import com.example.yota_pay.application.features.sequence_processing.request.SequenceValidationRequest
+import com.example.yota_pay.application.features.sequence_processing.response.SequenceValidationResponse
 import com.example.yota_pay.application.features.sequence_processing.services.SequenceValidationService
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
