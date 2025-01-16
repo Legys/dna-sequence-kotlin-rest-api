@@ -3,36 +3,51 @@ package com.example.yota_pay.application.features.sequence_processing.domain
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 
-class SequenceValidatorTests :
-    BehaviorSpec({
+class DnaSequenceTests : BehaviorSpec({
 
-        val validator = { value: String -> DnaSequence.create(value) }
-
-        given("a valid DNA sequence") {
-            `when`("validating the sequence") {
-                then("it should return true") {
-                    validator("ATCG").isSuccess shouldBe true
-                    validator("GCTA").isSuccess shouldBe true
-                    validator("AAAA").isSuccess shouldBe true
-                    validator("T").isSuccess shouldBe true // single character
-                    validator("ATCGATCGATCG").isSuccess shouldBe true // repeated pattern
-                }
+    given("a DNA sequence") {
+        `when`("creating with valid sequence") {
+            then("it should return success") {
+                DnaSequence.create("ATCG").isSuccess shouldBe true
+                DnaSequence.create("GCTA").isSuccess shouldBe true
+                DnaSequence.create("AAAA").isSuccess shouldBe true 
+                DnaSequence.create("T").isSuccess shouldBe true
+                DnaSequence.create("ATCGATCGATCG").isSuccess shouldBe true
             }
         }
 
-        given("an invalid DNA sequence") {
-            `when`("validating the sequence") {
-                then("it should return false") {
-                    validator("ATCX").isSuccess shouldBe false
-                    validator("1234").isSuccess shouldBe false
-                    validator("ATCG ").isSuccess shouldBe false
-                    validator("").isSuccess shouldBe false
-                    validator("ATCG\n").isSuccess shouldBe false // newline character
-                    validator("ATCG\t").isSuccess shouldBe false // tab character
-                    validator("ATCGATCGATCGX").isSuccess shouldBe false // invalid character at end
-                    validator("ATGC GCTA").isSuccess shouldBe false // whitespace
-                    validator("atgcgcta").isSuccess shouldBe false
-                }
+        `when`("creating with invalid sequence") {
+            then("it should return failure") {
+                DnaSequence.create("ATCX").isSuccess shouldBe false
+                DnaSequence.create("1234").isSuccess shouldBe false
+                DnaSequence.create("ATCG ").isSuccess shouldBe false
+                DnaSequence.create("").isSuccess shouldBe false
+                DnaSequence.create("ATCG\n").isSuccess shouldBe false
+                DnaSequence.create("ATCG\t").isSuccess shouldBe false
+                DnaSequence.create("ATCGATCGATCGX").isSuccess shouldBe false
+                DnaSequence.create("ATGC GCTA").isSuccess shouldBe false
+                DnaSequence.create("atgcgcta").isSuccess shouldBe false
             }
         }
-    })
+
+        `when`("creating reverse complement") {
+            then("it should return correct sequence") {
+                val sequence = DnaSequence.create("ATCG").getOrThrow()
+                sequence.reverseComplement().value shouldBe "CGAT"
+                
+                DnaSequence.create("GCTA").getOrThrow()
+                    .reverseComplement().value shouldBe "TAGC"
+                    
+                DnaSequence.create("AAAA").getOrThrow()
+                    .reverseComplement().value shouldBe "TTTT"
+            }
+        }
+
+        `when`("converting to string") {
+            then("it should return the sequence value") {
+                DnaSequence.create("ATCG").getOrThrow()
+                    .toString() shouldBe "ATCG"
+            }
+        }
+    }
+})
