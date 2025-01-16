@@ -6,7 +6,7 @@ import io.kotest.matchers.shouldBe
 class SequenceValidatorTests :
     BehaviorSpec({
 
-        val validator = SequenceValidator::validateSequence
+        val validator = { value: String -> DnaSequence.create(value) }
 
         given("a valid DNA sequence") {
             `when`("validating the sequence") {
