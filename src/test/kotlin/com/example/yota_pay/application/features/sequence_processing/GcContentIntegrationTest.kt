@@ -94,4 +94,39 @@ class GcContentIntegrationTest(
             }
         }
     }
+
+    given("an invalid sequence request") {
+        `when`("sequence contains lowercase letters") {
+            Given {
+                contentType("application/json")
+                body(GcContentRequest("atgcgcta"))
+            } When {
+                post("/api/sequence/gc-content")
+            } Then {
+                statusCode(400)
+            }
+        }
+
+        `when`("sequence contains whitespace") {
+            Given {
+                contentType("application/json")
+                body(GcContentRequest("ATGC GCTA"))
+            } When {
+                post("/api/sequence/gc-content")
+            } Then {
+                statusCode(400)
+            }
+        }
+
+        `when`("sequence contains invalid characters") {
+            Given {
+                contentType("application/json")
+                body(GcContentRequest("ATGXGCTA"))
+            } When {
+                post("/api/sequence/gc-content")
+            } Then {
+                statusCode(400)
+            }
+        }
+    }
 })
