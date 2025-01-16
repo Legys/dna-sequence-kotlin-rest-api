@@ -1,5 +1,15 @@
 package com.example.yota_pay.application.features.sequence_processing.domain
 
+/**
+ * Represents a validated DNA sequence containing only A, C, G, T characters.
+ * 
+ * Uses a factory method pattern with Result type for type-safe initialization:
+ * - Constructor is private to enforce validation
+ * - create() method returns Result<DnaSequence> instead of throwing exceptions
+ * - Ensures all instances are valid by construction
+ * - Provides clear error handling through Result type
+ * - Maintains immutability and value semantics
+ */
 @JvmInline
 value class DnaSequence private constructor(
     val value: String,
