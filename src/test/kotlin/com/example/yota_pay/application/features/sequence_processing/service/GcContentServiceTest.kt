@@ -5,7 +5,6 @@ import com.example.yota_pay.application.features.sequence_processing.domain.GcCo
 import com.example.yota_pay.application.features.sequence_processing.domain.SequenceError
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.types.shouldBeInstanceOf
 
 class GcContentCalculatorTest :
     BehaviorSpec({
@@ -40,7 +39,7 @@ class GcContentCalculatorTest :
                     val result = DnaSequence.create("")
                     then("should fail with EmptySequence error") {
                         result.isFailure shouldBe true
-                        result.exceptionOrNull() shouldBeInstanceOf SequenceError.EmptySequence::class
+                        result.exceptionOrNull().shouldBeInstanceOf<SequenceError.EmptySequence>()
                     }
                 }
 
@@ -48,7 +47,7 @@ class GcContentCalculatorTest :
                     val result = DnaSequence.create("atgcgcta")
                     then("should fail with InvalidSequence error") {
                         result.isFailure shouldBe true
-                        result.exceptionOrNull() shouldBeInstanceOf SequenceError.InvalidSequence::class
+                        result.exceptionOrNull().shouldBeInstanceOf<SequenceError.InvalidSequence>()
                     }
                 }
             }
