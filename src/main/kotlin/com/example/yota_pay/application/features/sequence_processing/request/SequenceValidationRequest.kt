@@ -6,3 +6,7 @@ data class SequenceValidationRequest(
     @field:NotBlank(message = "Sequence cannot be blank")
     val sequence: String,
 )
+
+data class GcContentRequest(
+    val sequence: String
+)
