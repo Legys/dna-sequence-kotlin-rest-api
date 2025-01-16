@@ -17,12 +17,17 @@ value class DnaSequence private constructor(
     companion object {
         fun create(value: String): Result<DnaSequence> {
             return when {
-                value.isEmpty() -> Result.failure(SequenceError.EmptySequence("Sequence cannot be empty"))
-                !value.all { it in setOf('A', 'T', 'C', 'G') } ->
+                isEmpty(value) -> Result.failure(SequenceError.EmptySequence("Sequence cannot be empty"))
+                containsInvalidCharacters(value) -> 
                     Result.failure(SequenceError.InvalidSequence("Sequence contains invalid characters"))
                 else -> Result.success(DnaSequence(value))
             }
         }
+
+        private fun isEmpty(value: String): Boolean = value.isEmpty()
+
+        private fun containsInvalidCharacters(value: String): Boolean =
+            !value.all { it in setOf('A', 'T', 'C', 'G') }
     }
 
     fun reverseComplement(): DnaSequence {
