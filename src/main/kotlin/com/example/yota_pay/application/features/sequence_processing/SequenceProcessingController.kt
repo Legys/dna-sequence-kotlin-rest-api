@@ -22,12 +22,21 @@ class SequenceProcessingController(
     @PostMapping("/validate")
     fun validateSequence(
         @Valid @RequestBody request: SequenceValidationRequest,
-    ): SequenceValidationResponse {
-        val isValid = sequenceValidationService.validateSequence(request.sequence).isSuccess
-        // Fictional todo item.
-        // TODO: Consider changing the response to include a list of business rules that failed.
-        return SequenceValidationResponse(isValid)
-    }
+    ): SequenceValidationResponse =
+        sequenceValidationService.validateSequence(request.sequence).fold(
+            onSuccess = { _ ->
+                SequenceValidationResponse(
+                    true,
+                    "Sequence is valid",
+                )
+            },
+            onFailure = { error ->
+                SequenceValidationResponse(
+                    false,
+                    error.message ?: "Sequence is invalid",
+                )
+            },
+        )
 
     @PostMapping("/gc-content")
     fun calculateGcContent(
