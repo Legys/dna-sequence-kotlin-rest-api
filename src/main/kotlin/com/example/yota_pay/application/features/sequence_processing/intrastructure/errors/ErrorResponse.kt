@@ -1,4 +1,4 @@
-package com.example.yota_pay.intrastructure.errors
+package com.example.yota_pay.application.features.sequence_processing.intrastructure.errors
 
 data class ErrorResponse(
     val title: String,

@@ -1,6 +1,6 @@
-package com.example.yota_pay.intrastructure.errors
+package com.example.yota_pay.application.features.sequence_processing.intrastructure.errors
 
-import com.example.yota_pay.intrastructure.utils.logger
+import logger
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.MethodArgumentNotValidException
@@ -13,9 +13,10 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun handleValidationExceptions(ex: MethodArgumentNotValidException): ResponseEntity<ErrorResponse> {
-        val errors = ex.bindingResult.fieldErrors
-            .map { it.field to it.defaultMessage }
-        
+        val errors =
+            ex.bindingResult.fieldErrors
+                .map { it.field to it.defaultMessage }
+
         log.info("Validation error - Field errors: {}", errors)
         log.debug("Full validation exception details:", ex)
 
