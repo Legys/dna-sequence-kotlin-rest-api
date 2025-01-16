@@ -1,5 +1,6 @@
 package com.example.yota_pay.application.features.sequence_processing.service
 
+import com.example.yota_pay.application.features.sequence_processing.domain.DnaSequence
 import com.example.yota_pay.application.features.sequence_processing.domain.GcContentCalculator
 import com.example.yota_pay.application.features.sequence_processing.domain.SequenceValidator
 import com.example.yota_pay.application.features.sequence_processing.request.GcContentRequest
