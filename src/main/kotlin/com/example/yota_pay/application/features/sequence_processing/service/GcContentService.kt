@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service
 
 @Service
 class GcContentService {
-    fun calculateGcContent(request: GcContentRequest): Result<GcContentResponse> {
-        return SequenceValidator.validateSequence(request.sequence)
-            .mapCatching { validSequence ->
+    fun calculateGcContent(request: GcContentRequest): Result<GcContentResponse> =
+        SequenceValidator
+            .validateSequence(request.sequence)
+            .map { validSequence ->
                 val gcContent = GcContentCalculator.calculateGcContent(validSequence)
                 GcContentResponse(gcContent)
             }
-    }
 }
