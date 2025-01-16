@@ -1,0 +1,5 @@
+[*.kt]
+ktlint_standard_package-name = disabled
+ktlint_standard_no-trailing-spaces = disabled
+ktlint_standard_no-blank-line-in-list = disabled
+

@@ -38,3 +38,6 @@ out/
 
 ### Kotlin ###
 .kotlin
+
+.aider.conf.yml
+.aider*
