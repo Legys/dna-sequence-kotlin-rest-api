@@ -5,7 +5,6 @@ import com.example.yota_pay.application.features.sequence_processing.request.Seq
 import com.example.yota_pay.application.features.sequence_processing.response.SequenceValidationResponse
 import com.example.yota_pay.application.features.sequence_processing.service.GcContentService
 import com.example.yota_pay.application.features.sequence_processing.service.SequenceValidationService
-import com.example.yota_pay.application.features.sequence_processing.intrastructure.errors.ErrorResponse
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -25,18 +24,17 @@ class SequenceProcessingController(
         @Valid @RequestBody request: SequenceValidationRequest,
     ): SequenceValidationResponse {
         val isValid = sequenceValidationService.validateSequence(request.sequence).isSuccess
+        // Fictional todo item.
+        // TODO: Consider changing the response to include a list of business rules that failed.
         return SequenceValidationResponse(isValid)
     }
 
     @PostMapping("/gc-content")
     fun calculateGcContent(
         @Valid @RequestBody request: GcContentRequest,
-    ): ResponseEntity<Any> {
-        return when (val result = gcContentService.calculateGcContent(request)) {
-            is Result.Success -> ResponseEntity.ok(result.getOrNull())
-            is Result.Failure -> ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(ErrorResponse("Validation error", listOf(ErrorResponse.Error("sequence", result.exceptionOrNull()?.message ?: "Unknown error"))))
-        }
-    }
+    ): ResponseEntity<*> =
+        gcContentService.calculateGcContent(request).fold(
+            onSuccess = { ResponseEntity.ok(it) },
+            onFailure = { ResponseEntity.status(HttpStatus.BAD_REQUEST).body(it) },
+        )
 }

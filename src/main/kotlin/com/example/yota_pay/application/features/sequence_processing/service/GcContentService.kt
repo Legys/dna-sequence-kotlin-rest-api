@@ -6,15 +6,19 @@ import org.springframework.stereotype.Service
 
 @Service
 class GcContentService(
-    private val sequenceValidationService: SequenceValidationService
+    private val sequenceValidationService: SequenceValidationService,
 ) {
-    fun calculateGcContent(request: GcContentRequest): Result<GcContentResponse> {
-        return sequenceValidationService.validateSequence(request.sequence)
-            .mapCatching { validSequence ->
-                val gcCount = validSequence.count { it == 'G' || it == 'C' }
-                val totalLength = validSequence.length
-                val gcContent = if (totalLength > 0) gcCount.toDouble() / totalLength else 0.0
-                GcContentResponse(gcContent)
-            }
+    fun calculateGcContent(request: GcContentRequest): Result<GcContentResponse> =
+        sequenceValidationService
+            .validateSequence(request.sequence)
+            .map { sequence ->
+                countGcContent(sequence)
+            }.map { gcContent -> GcContentResponse(gcContent) }
+
+    private fun countGcContent(sequence: String): Double {
+        val gcCount = sequence.count { it == 'G' || it == 'C' }
+        val totalLength = sequence.length
+        val gcContent = if (totalLength > 0) gcCount.toDouble() / totalLength else 0.0
+        return gcContent
     }
 }
