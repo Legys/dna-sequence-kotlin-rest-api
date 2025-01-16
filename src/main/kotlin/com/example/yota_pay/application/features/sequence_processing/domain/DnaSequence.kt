@@ -1,11 +1,17 @@
 package com.example.yota_pay.application.features.sequence_processing.domain
 
 @JvmInline
-value class DnaSequence(
+value class DnaSequence private constructor(
     val value: String,
 ) {
-    init {
-        require(value.all { it in "ACGT" }) { "Invalid DNA sequence: $value" }
+    companion object {
+        fun create(value: String): Result<DnaSequence> {
+            return if (value.all { it in "ACGT" }) {
+                Result.success(DnaSequence(value))
+            } else {
+                Result.failure(SequenceError.InvalidSequence(value))
+            }
+        }
     }
 
     fun reverseComplement(): DnaSequence {
