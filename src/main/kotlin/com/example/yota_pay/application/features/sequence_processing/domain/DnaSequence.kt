@@ -16,10 +16,11 @@ value class DnaSequence private constructor(
 ) {
     companion object {
         fun create(value: String): Result<DnaSequence> {
-            return if (value.all { it in "ACGT" }) {
-                Result.success(DnaSequence(value))
-            } else {
-                Result.failure(SequenceError.InvalidSequence(value))
+            return when {
+                value.isEmpty() -> Result.failure(SequenceError.EmptySequence("Sequence cannot be empty"))
+                !value.all { it in setOf('A', 'T', 'C', 'G') } ->
+                    Result.failure(SequenceError.InvalidSequence("Sequence contains invalid characters"))
+                else -> Result.success(DnaSequence(value))
             }
         }
     }
