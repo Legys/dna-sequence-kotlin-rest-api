@@ -8,24 +8,38 @@ Requirements:
   Decompose code from complex functions into smaller.
 
 The codebase is structured in Vertical Slices with Clean Architecture.
-Structure example should be followed:
+Structure example from this project:
 
-src/kotlin/com/wordy_app/wordy/application/features/
-└── study/
+src/kotlin/com/example/yota_pay/application/features/sequence_processing/
 ├── domain/
-│ └── StudyStage.kt
+│   ├── dna/
+│   │   ├── ContentOperation.kt        # GC content calculations
+│   │   ├── DnaSequence.kt            # DNA sequence value class
+│   │   ├── MotifSearchOperation.kt   # Motif pattern searching
+│   │   ├── ReverseComplementOperation.kt
+│   │   └── TransformOperation.kt     # DNA to RNA transcription
+│   ├── rna/
+│   │   └── RnaSequence.kt            # RNA sequence value class
+│   └── SequenceError.kt              # Domain error hierarchy
 ├── request/
-│ └── UpdateStudyProgressRequest.kt
+│   ├── FindMotifRequest.kt           # Motif search request
+│   ├── GcContentRequest.kt           # GC content calculation request
+│   ├── ReverseComplementRequest.kt   # Reverse complement request
+│   ├── SequenceValidationRequest.kt  # Sequence validation request
+│   └── TransformSequenceRequest.kt   # DNA to RNA transform request
 ├── response/
-│ ├── StudyDueResponse.kt
-│ └── StudyProgressResponse.kt
-├── repositories/
-│ └── StudyProgressRepository.kt
-├── services/
-│ ├── CreateStudyProgressService.kt
-│ ├── GetDueStudyService.kt
-│ └── UpdateStudyProgressService.kt
-└── StudyController.kt
+│   ├── FindMotifResponse.kt          # Motif positions response
+│   ├── GcContentResponse.kt          # GC content percentage response
+│   ├── ReverseComplementResponse.kt  # Reverse complemented sequence
+│   ├── SequenceValidationResponse.kt # Sequence validation result
+│   └── TransformSequenceResponse.kt  # Transformed RNA sequence
+├── service/
+│   ├── FindMotifService.kt           # Motif search service
+│   ├── GcContentService.kt           # GC content calculation service
+│   ├── ReverseComplementService.kt   # Reverse complement service
+│   ├── SequenceValidationService.kt  # Sequence validation service
+│   └── TransformSequenceService.kt   # DNA to RNA transform service
+└── SequenceProcessingController.kt   # REST API endpoints
 
 Nuances:
 
