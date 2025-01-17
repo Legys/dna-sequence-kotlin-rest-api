@@ -117,6 +117,75 @@ Applied edit to:
 
 Commit: 7381ebd fix: handle empty strings as invalid DNA sequences in SequenceValidationService
 
+## API Usage Examples
+
+### Validate DNA Sequence
+```bash
+# Valid sequence
+curl -X POST http://localhost:8080/api/sequence/validate \
+  -H "Content-Type: application/json" \
+  -d '{"sequence": "ATCG"}'
+
+# Invalid sequence (contains invalid characters)
+curl -X POST http://localhost:8080/api/sequence/validate \
+  -H "Content-Type: application/json" \
+  -d '{"sequence": "ATCGX"}'
+```
+
+### Calculate GC Content
+```bash 
+# Valid sequence
+curl -X POST http://localhost:8080/api/sequence/gc-content \
+  -H "Content-Type: application/json" \
+  -d '{"sequence": "ATCGGC"}'
+
+# Error case (empty sequence)
+curl -X POST http://localhost:8080/api/sequence/gc-content \
+  -H "Content-Type: application/json" \
+  -d '{"sequence": ""}'
+```
+
+### Find Motif
+```bash
+# Valid sequence and motif
+curl -X POST http://localhost:8080/api/sequence/find-motif \
+  -H "Content-Type: application/json" \
+  -d '{"sequence": "ATCGATCG", "motif": "ATC"}'
+
+# Valid sequence but motif not found
+curl -X POST http://localhost:8080/api/sequence/find-motif \
+  -H "Content-Type: application/json" \
+  -d '{"sequence": "ATCGATCG", "motif": "GGG"}'
+```
+
+### Transform DNA to RNA
+```bash
+# Valid sequence
+curl -X POST http://localhost:8080/api/sequence/transform \
+  -H "Content-Type: application/json" \
+  -d '{"sequence": "ATCG"}'
+
+# Error case (invalid characters)
+curl -X POST http://localhost:8080/api/sequence/transform \
+  -H "Content-Type: application/json" \
+  -d '{"sequence": "ATCGX"}'
+```
+
+### Reverse Complement
+```bash
+# Valid sequence
+curl -X POST http://localhost:8080/api/sequence/reverse-complement \
+  -H "Content-Type: application/json" \
+  -d '{"sequence": "ATCG"}'
+
+# Error case (empty sequence)
+curl -X POST http://localhost:8080/api/sequence/reverse-complement \
+  -H "Content-Type: application/json" \
+  -d '{"sequence": ""}'
+```
+
+Note: All endpoints return JSON responses. Error responses will include an error message and status code.
+
 ### Refactoring
 
 Playing around with different tools and models generate a slightly different
