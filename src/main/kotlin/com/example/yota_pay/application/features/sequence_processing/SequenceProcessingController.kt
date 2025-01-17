@@ -2,11 +2,13 @@ package com.example.yota_pay.application.features.sequence_processing
 
 import com.example.yota_pay.application.features.sequence_processing.request.FindMotifRequest
 import com.example.yota_pay.application.features.sequence_processing.request.GcContentRequest
+import com.example.yota_pay.application.features.sequence_processing.request.ReverseComplementRequest
 import com.example.yota_pay.application.features.sequence_processing.request.SequenceValidationRequest
 import com.example.yota_pay.application.features.sequence_processing.request.TransformSequenceRequest
 import com.example.yota_pay.application.features.sequence_processing.response.SequenceValidationResponse
 import com.example.yota_pay.application.features.sequence_processing.service.FindMotifService
 import com.example.yota_pay.application.features.sequence_processing.service.GcContentService
+import com.example.yota_pay.application.features.sequence_processing.service.ReverseComplementService
 import com.example.yota_pay.application.features.sequence_processing.service.SequenceValidationService
 import com.example.yota_pay.application.features.sequence_processing.service.TransformSequenceService
 import jakarta.validation.Valid
@@ -24,6 +26,7 @@ class SequenceProcessingController(
     private val gcContentService: GcContentService,
     private val findMotifService: FindMotifService,
     private val transformSequenceService: TransformSequenceService,
+    private val reverseComplementService: ReverseComplementService,
 ) {
     @PostMapping("/validate")
     fun validateSequence(
@@ -67,6 +70,15 @@ class SequenceProcessingController(
         @Valid @RequestBody request: TransformSequenceRequest,
     ): ResponseEntity<*> =
         transformSequenceService.execute(request).fold(
+            onSuccess = { ResponseEntity.ok(it) },
+            onFailure = { ResponseEntity.status(HttpStatus.BAD_REQUEST).body(it.message) },
+        )
+
+    @PostMapping("/reverse-complement")
+    fun reverseComplement(
+        @Valid @RequestBody request: ReverseComplementRequest,
+    ): ResponseEntity<*> =
+        reverseComplementService.execute(request).fold(
             onSuccess = { ResponseEntity.ok(it) },
             onFailure = { ResponseEntity.status(HttpStatus.BAD_REQUEST).body(it.message) },
         )
