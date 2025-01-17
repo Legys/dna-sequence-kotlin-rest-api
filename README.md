@@ -258,7 +258,3 @@ Proposed unified style:
 * Consistent indentation
 * Consistent line breaks for long method chains
 
-Let's apply these changes file by file. Which file would you like to start with?
-
-The changes will be purely stylistic - we won't modify any test logic or assertions, just make them consistent in style
-and structure.
