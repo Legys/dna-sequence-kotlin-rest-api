@@ -1,6 +1,8 @@
 package com.example.yota_pay.application.features.sequence_processing.domain.dna
 
 import io.kotest.core.spec.style.BehaviorSpec
+import io.kotest.matchers.result.shouldBeFailure
+import io.kotest.matchers.result.shouldBeSuccess
 import io.kotest.matchers.shouldBe
 
 class DnaSequenceTests :
@@ -9,40 +11,27 @@ class DnaSequenceTests :
         given("a DNA sequence") {
             `when`("creating with valid sequence") {
                 then("it should return success") {
-                    DnaSequence.create("ATCG").isSuccess shouldBe true
-                    DnaSequence.create("GCTA").isSuccess shouldBe true
-                    DnaSequence.create("AAAA").isSuccess shouldBe true
-                    DnaSequence.create("T").isSuccess shouldBe true
-                    DnaSequence.create("ATCGATCGATCG").isSuccess shouldBe true
+                    DnaSequence.create("ATCG").shouldBeSuccess()
+                    DnaSequence.create("GCTA").shouldBeSuccess()
+                    DnaSequence.create("AAAA").shouldBeSuccess()
+                    DnaSequence.create("T").shouldBeSuccess()
+                    DnaSequence.create("ATCGATCGATCG").shouldBeSuccess()
                 }
             }
 
             `when`("creating with invalid sequence") {
                 then("it should return failure") {
-                    DnaSequence.create("ATCX").isSuccess shouldBe false
-                    DnaSequence.create("1234").isSuccess shouldBe false
-                    DnaSequence.create("ATCG ").isSuccess shouldBe false
-                    DnaSequence.create("").isSuccess shouldBe false
-                    DnaSequence.create("ATCG\n").isSuccess shouldBe false
-                    DnaSequence.create("ATCG\t").isSuccess shouldBe false
-                    DnaSequence.create("ATCGATCGATCGX").isSuccess shouldBe false
-                    DnaSequence.create("ATGC GCTA").isSuccess shouldBe false
-                    DnaSequence.create("atgcgcta").isSuccess shouldBe false
+                    DnaSequence.create("ATCX").shouldBeFailure()
+                    DnaSequence.create("1234").shouldBeFailure()
+                    DnaSequence.create("ATCG ").shouldBeFailure()
+                    DnaSequence.create("").shouldBeFailure()
+                    DnaSequence.create("ATCG\n").shouldBeFailure()
+                    DnaSequence.create("ATCG\t").shouldBeFailure()
+                    DnaSequence.create("ATCGATCGATCGX").shouldBeFailure()
+                    DnaSequence.create("ATGC GCTA").shouldBeFailure()
+                    DnaSequence.create("atgcgcta").shouldBeFailure()
                 }
             }
-
-//        `when`("creating reverse complement") {
-//            then("it should return correct sequence") {
-//                val sequence = DnaSequence.create("ATCG").getOrThrow()
-//                sequence.calculateReverse().value shouldBe "CGAT"
-//                
-//                DnaSequence.create("GCTA").getOrThrow()
-//                    .reverseComplement().value shouldBe "TAGC"
-//                    
-//                DnaSequence.create("AAAA").getOrThrow()
-//                    .reverseComplement().value shouldBe "TTTT"
-//            }
-//        }
 
             `when`("converting to string") {
                 then("it should return the sequence value") {
