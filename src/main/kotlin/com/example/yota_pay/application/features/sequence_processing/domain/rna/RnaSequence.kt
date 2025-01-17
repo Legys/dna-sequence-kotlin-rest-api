@@ -21,7 +21,7 @@ value class RnaSequence private constructor(
             when {
                 isEmpty(value) -> Result.failure(SequenceError.EmptySequence())
                 containsInvalidCharacters(value) ->
-                    Result.failure(SequenceError.InvalidSequence())
+                    Result.failure(SequenceError.InvalidRnaSequence())
 
                 else -> Result.success(RnaSequence(value))
             }

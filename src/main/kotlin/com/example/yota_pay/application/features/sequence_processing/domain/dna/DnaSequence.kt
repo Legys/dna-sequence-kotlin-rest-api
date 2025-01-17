@@ -15,7 +15,7 @@ value class DnaSequence private constructor(
             when {
                 isEmpty(value) -> Result.failure(SequenceError.EmptySequence())
                 containsInvalidCharacters(value) ->
-                    Result.failure(SequenceError.InvalidSequence())
+                    Result.failure(SequenceError.InvalidDnaSequence())
 
                 else -> Result.success(DnaSequence(value))
             }
