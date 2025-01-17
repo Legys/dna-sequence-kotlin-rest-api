@@ -2,7 +2,7 @@ package com.example.yota_pay.application.features.sequence_processing.domain
 
 /**
  * Represents a validated DNA sequence containing only A, C, G, T characters.
- * 
+ *
  * Uses a factory method pattern with Result type for type-safe initialization:
  * - Constructor is private to enforce validation
  * - create() method returns Result<DnaSequence> instead of throwing exceptions
@@ -15,14 +15,13 @@ value class DnaSequence private constructor(
     val value: String,
 ) {
     companion object {
-        fun create(value: String): Result<DnaSequence> {
-            return when {
-                isEmpty(value) -> Result.failure(SequenceError.EmptySequence("Sequence cannot be empty"))
-                containsInvalidCharacters(value) -> 
-                    Result.failure(SequenceError.InvalidSequence("Sequence contains invalid characters"))
+        fun create(value: String): Result<DnaSequence> =
+            when {
+                isEmpty(value) -> Result.failure(SequenceError.EmptySequence())
+                containsInvalidCharacters(value) ->
+                    Result.failure(SequenceError.InvalidSequence())
                 else -> Result.success(DnaSequence(value))
             }
-        }
 
         private fun isEmpty(value: String): Boolean = value.isEmpty()
 
