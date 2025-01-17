@@ -4,6 +4,10 @@
 - Aider https://aider.chat/
 - DeepSeek v3 via https://app.hyperbolic.xyz/models/deepseek-v3 API
 
+### Tests
+
+Coverage: ![img.png](coverage.png)
+
 ## AI cooperation use cases:
 
 ### Planning the feature
@@ -112,3 +116,59 @@ Applied edit to:
 `src/main/kotlin/com/example/yota_pay/application/features/sequence_processing/service/SequenceValidationService.kt`
 
 Commit: 7381ebd fix: handle empty strings as invalid DNA sequences in SequenceValidationService
+
+### Refactoring
+
+Playing around with different tools and models generate a slightly different
+code styles in tests, so we can try to ask it to unify the style of tests.
+
+**Output**:
+
+Current inconsistencies across test files:
+
+1. Request Specification Setup:
+
+* Some use RestAssured.port = port
+* Others use RequestSpecBuilder() with full configuration
+
+2. Test Structure:
+
+* Some use contentType("application/json") inline
+* Others configure it in request spec
+* Some use statusCode() with HttpStatus enum
+* Others use raw status codes
+
+3. Assertion Style:
+
+* Mix of Kotest matchers and RestAssured matchers
+* Some use shouldBeEqual while others use shouldBe
+
+Proposed unified style:
+
+1. Request Specification:
+
+* Use RequestSpecBuilder() consistently
+* Configure base URI, port and content type once in beforeSpec
+
+2. Test Structure:
+
+* Use HttpStatus enum for status codes
+* Keep consistent Given/When/Then structure
+* Use Kotest matchers for assertions
+
+3. Assertion Style:
+
+* Prefer Kotest matchers (shouldBe) over RestAssured matchers
+* Use plusOrMinus for double comparisons
+* Use collection matchers like shouldContainExactly
+
+4. Formatting:
+
+* Consistent spacing between test blocks
+* Consistent indentation
+* Consistent line breaks for long method chains
+
+Let's apply these changes file by file. Which file would you like to start with?
+
+The changes will be purely stylistic - we won't modify any test logic or assertions, just make them consistent in style
+and structure.
