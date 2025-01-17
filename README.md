@@ -1,10 +1,10 @@
+## Tests
+
 To run tests, use the following command:
 
 ```bash
 ./gradlew test
 ```
-
-## Tests
 
 Coverage: ![img.png](coverage.png)
 
