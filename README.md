@@ -10,6 +10,12 @@ Coverage: ![img.png](coverage.png)
 
 ## API Usage Examples
 
+To run the application, use:
+
+```bash
+./gradlew bootRun
+```
+
 ### Validate DNA Sequence
 
 ```bash
