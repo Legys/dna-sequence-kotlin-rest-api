@@ -5,112 +5,115 @@ import com.example.yota_pay.application.features.sequence_processing.response.Se
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.restassured.RestAssured
+import io.restassured.builder.RequestSpecBuilder
+import io.restassured.http.ContentType
 import io.restassured.module.kotlin.extensions.Extract
 import io.restassured.module.kotlin.extensions.Given
 import io.restassured.module.kotlin.extensions.Then
 import io.restassured.module.kotlin.extensions.When
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
+import org.springframework.http.HttpStatus
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class SequenceValidationIntegrationTests(
-    @LocalServerPort val port: Int,
+    @LocalServerPort private val port: Int,
 ) : BehaviorSpec({
 
-        beforeSpec {
-            RestAssured.port = port
-        }
+    beforeSpec {
+        RestAssured.requestSpecification = RequestSpecBuilder()
+            .setContentType(ContentType.JSON)
+            .setBaseUri("http://localhost:$port")
+            .build()
+    }
 
-        given("a valid DNA sequence request") {
-            `when`("POST /api/sequence/validate is called") {
-                val response =
-                    Given {
-                        contentType("application/json")
-                        body(SequenceValidationRequest("ATCG"))
-                    } When {
-                        post("/api/sequence/validate")
-                    } Then {
-                        statusCode(200)
-                    } Extract {
-                        `as`(SequenceValidationResponse::class.java)
-                    }
+    given("validate endpoint") {
+        val endpoint = "/api/sequence/validate"
 
-                then("should return valid true") {
-                    response.valid shouldBe true
-                }
-            }
-        }
-
-        given("an invalid DNA sequence request") {
-            `when`("POST /api/sequence/validate is called") {
-                val response =
-                    Given {
-                        contentType("application/json")
-                        body(SequenceValidationRequest("ATCX"))
-                    } When {
-                        post("/api/sequence/validate")
-                    } Then {
-                        statusCode(200)
-                    } Extract {
-                        `as`(SequenceValidationResponse::class.java)
-                    }
-
-                then("should return valid false") {
-                    response.valid shouldBe false
-                }
-            }
-        }
-
-        given("a request with invalid characters") {
-            `when`("POST /api/sequence/validate is called") {
-                val response =
-                    Given {
-                        contentType("application/json")
-                        body(SequenceValidationRequest("1234"))
-                    } When {
-                        post("/api/sequence/validate")
-                    } Then {
-                        statusCode(200)
-                    } Extract {
-                        `as`(SequenceValidationResponse::class.java)
-                    }
-
-                then("should return valid false") {
-                    response.valid shouldBe false
-                }
-            }
-        }
-
-        given("a request with whitespace") {
-            `when`("POST /api/sequence/validate is called") {
-                val response =
-                    Given {
-                        contentType("application/json")
-                        body(SequenceValidationRequest("ATCG "))
-                    } When {
-                        post("/api/sequence/validate")
-                    } Then {
-                        statusCode(200)
-                    } Extract {
-                        `as`(SequenceValidationResponse::class.java)
-                    }
-
-                then("should return error") {
-                    response.valid shouldBe false
-                }
-            }
-        }
-
-        given("an empty sequence request") {
-            `when`("POST /api/sequence/validate is called") {
-                Given {
-                    contentType("application/json")
-                    body(SequenceValidationRequest(""))
+        `when`("valid DNA sequence is provided") {
+            val request = SequenceValidationRequest("ATCG")
+            
+            then("should return valid true") {
+                val response = Given {
+                    body(request)
                 } When {
-                    post("/api/sequence/validate")
+                    post(endpoint)
                 } Then {
-                    statusCode(400)
+                    statusCode(HttpStatus.OK.value())
+                } Extract {
+                    `as`(SequenceValidationResponse::class.java)
+                }
+
+                response.valid shouldBe true
+            }
+        }
+
+        `when`("invalid DNA sequence is provided") {
+            val request = SequenceValidationRequest("ATCX")
+            
+            then("should return valid false") {
+                val response = Given {
+                    body(request)
+                } When {
+                    post(endpoint)
+                } Then {
+                    statusCode(HttpStatus.OK.value())
+                } Extract {
+                    `as`(SequenceValidationResponse::class.java)
+                }
+
+                response.valid shouldBe false
+            }
+        }
+
+        `when`("sequence contains invalid characters") {
+            val request = SequenceValidationRequest("1234")
+            
+            then("should return valid false") {
+                val response = Given {
+                    body(request)
+                } When {
+                    post(endpoint)
+                } Then {
+                    statusCode(HttpStatus.OK.value())
+                } Extract {
+                    `as`(SequenceValidationResponse::class.java)
+                }
+
+                response.valid shouldBe false
+            }
+        }
+
+        `when`("sequence contains whitespace") {
+            val request = SequenceValidationRequest("ATCG ")
+            
+            then("should return valid false") {
+                val response = Given {
+                    body(request)
+                } When {
+                    post(endpoint)
+                } Then {
+                    statusCode(HttpStatus.OK.value())
+                } Extract {
+                    `as`(SequenceValidationResponse::class.java)
+                }
+
+                response.valid shouldBe false
+            }
+        }
+
+        `when`("empty sequence is provided") {
+            val request = SequenceValidationRequest("")
+            
+            then("should return bad request") {
+                Given {
+                    body(request)
+                } When {
+                    post(endpoint)
+                } Then {
+                    statusCode(HttpStatus.BAD_REQUEST.value())
                 }
             }
         }
-    })
+    }
+})
