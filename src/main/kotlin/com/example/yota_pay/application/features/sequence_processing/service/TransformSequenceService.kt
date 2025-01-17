@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class TransformSequenceService {
-    fun execute(request: TransformSequenceRequest): Result<TransformSequenceResponse> =
+    fun transform(request: TransformSequenceRequest): Result<TransformSequenceResponse> =
         runCatching {
             val sequence =
                 DnaSequence

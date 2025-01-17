@@ -11,8 +11,8 @@ import com.example.yota_pay.application.features.sequence_processing.service.GcC
 import com.example.yota_pay.application.features.sequence_processing.service.ReverseComplementService
 import com.example.yota_pay.application.features.sequence_processing.service.SequenceValidationService
 import com.example.yota_pay.application.features.sequence_processing.service.TransformSequenceService
+import com.example.yota_pay.intrastructure.errors.toResponseEntity
 import jakarta.validation.Valid
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -50,36 +50,20 @@ class SequenceProcessingController(
     @PostMapping("/gc-content")
     fun calculateGcContent(
         @Valid @RequestBody request: GcContentRequest,
-    ): ResponseEntity<*> =
-        gcContentService.calculateGcContent(request).fold(
-            onSuccess = { ResponseEntity.ok(it) },
-            onFailure = { ResponseEntity.status(HttpStatus.BAD_REQUEST).body(it) },
-        )
+    ): ResponseEntity<*> = gcContentService.calculateGcContent(request).toResponseEntity()
 
     @PostMapping("/find-motif")
     fun findMotif(
         @Valid @RequestBody request: FindMotifRequest,
-    ): ResponseEntity<*> =
-        findMotifService.findMotif(request).fold(
-            onSuccess = { ResponseEntity.ok(it) },
-            onFailure = { ResponseEntity.status(HttpStatus.BAD_REQUEST).body(it.message) },
-        )
+    ): ResponseEntity<*> = findMotifService.findMotif(request).toResponseEntity()
 
     @PostMapping("/transform")
     fun transformSequence(
         @Valid @RequestBody request: TransformSequenceRequest,
-    ): ResponseEntity<*> =
-        transformSequenceService.execute(request).fold(
-            onSuccess = { ResponseEntity.ok(it) },
-            onFailure = { ResponseEntity.status(HttpStatus.BAD_REQUEST).body(it.message) },
-        )
+    ): ResponseEntity<*> = transformSequenceService.transform(request).toResponseEntity()
 
     @PostMapping("/reverse-complement")
     fun reverseComplement(
         @Valid @RequestBody request: ReverseComplementRequest,
-    ): ResponseEntity<*> =
-        reverseComplementService.execute(request).fold(
-            onSuccess = { ResponseEntity.ok(it) },
-            onFailure = { ResponseEntity.status(HttpStatus.BAD_REQUEST).body(it.message) },
-        )
+    ): ResponseEntity<*> = reverseComplementService.execute(request).toResponseEntity()
 }

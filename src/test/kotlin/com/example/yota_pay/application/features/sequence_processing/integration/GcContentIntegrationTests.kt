@@ -3,8 +3,10 @@ package com.example.yota_pay.application.features.sequence_processing.integratio
 import com.example.yota_pay.application.features.sequence_processing.domain.SequenceError
 import com.example.yota_pay.application.features.sequence_processing.request.GcContentRequest
 import com.example.yota_pay.application.features.sequence_processing.response.GcContentResponse
+import com.example.yota_pay.intrastructure.errors.ErrorResponse
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.doubles.plusOrMinus
+import io.kotest.matchers.equals.shouldBeEqual
 import io.kotest.matchers.shouldBe
 import io.restassured.RestAssured
 import io.restassured.module.kotlin.extensions.Extract
@@ -100,39 +102,50 @@ class GcContentIntegrationTests(
 
         given("an invalid sequence request") {
             `when`("sequence contains lowercase letters") {
-                Given {
-                    contentType("application/json")
-                    body(GcContentRequest("atgcgcta"))
-                } When {
-                    post("/api/sequence/gc-content")
-                } Then {
-                    statusCode(400)
-                    body("message", equalTo(SequenceError.InvalidDnaSequence().message))
-                }
+                val response =
+                    Given {
+                        contentType("application/json")
+                        body(GcContentRequest("atgcgcta"))
+                    } When {
+                        post("/api/sequence/gc-content")
+                    } Then {
+                        statusCode(400)
+                    } Extract {
+                        `as`(ErrorResponse::class.java)
+                    }
+
+                response.errors.first().detail shouldBeEqual SequenceError.InvalidDnaSequence().message
             }
 
             `when`("sequence contains whitespace") {
-                Given {
-                    contentType("application/json")
-                    body(GcContentRequest("ATGC GCTA"))
-                } When {
-                    post("/api/sequence/gc-content")
-                } Then {
-                    statusCode(400)
-                    body("message", equalTo(SequenceError.InvalidDnaSequence().message))
-                }
+                val response =
+                    Given {
+                        contentType("application/json")
+                        body(GcContentRequest("ATGC GCTA"))
+                    } When {
+                        post("/api/sequence/gc-content")
+                    } Then {
+                        statusCode(400)
+                    } Extract {
+                        `as`(ErrorResponse::class.java)
+                    }
+
+                response.errors.first().detail shouldBeEqual SequenceError.InvalidDnaSequence().message
             }
 
             `when`("sequence contains invalid characters") {
-                Given {
-                    contentType("application/json")
-                    body(GcContentRequest("ATGXGCTA"))
-                } When {
-                    post("/api/sequence/gc-content")
-                } Then {
-                    statusCode(400)
-                    body("message", equalTo(SequenceError.InvalidDnaSequence().message))
-                }
+                val response =
+                    Given {
+                        contentType("application/json")
+                        body(GcContentRequest("ATGXGCTA"))
+                    } When {
+                        post("/api/sequence/gc-content")
+                    } Then {
+                        statusCode(400)
+                    } Extract {
+                        `as`(ErrorResponse::class.java)
+                    }
+                response.errors.first().detail shouldBeEqual SequenceError.InvalidDnaSequence().message
             }
         }
     })
