@@ -1,12 +1,90 @@
-### Conventions
-
-- Code formatting using KtLint
-- Aider https://aider.chat/
-- DeepSeek v3 via https://app.hyperbolic.xyz/models/deepseek-v3 API
-
-### Tests
+## Tests
 
 Coverage: ![img.png](coverage.png)
+
+## API Usage Examples
+
+### Validate DNA Sequence
+
+```bash
+# Valid sequence
+curl -X POST http://localhost:8080/api/sequence/validate \
+  -H "Content-Type: application/json" \
+  -d '{"sequence": "ATCG"}'
+```
+
+```bash
+# Invalid sequence (contains invalid characters)
+curl -X POST http://localhost:8080/api/sequence/validate \
+  -H "Content-Type: application/json" \
+  -d '{"sequence": "ATCGX"}'
+```
+
+### Calculate GC Content
+
+```bash 
+# Valid sequence
+curl -X POST http://localhost:8080/api/sequence/gc-content \
+  -H "Content-Type: application/json" \
+  -d '{"sequence": "ATCGGC"}'
+```
+
+```bash 
+# Error case (empty sequence)
+curl -X POST http://localhost:8080/api/sequence/gc-content \
+  -H "Content-Type: application/json" \
+  -d '{"sequence": ""}'
+```
+
+### Find Motif
+
+```bash
+# Valid sequence and motif
+curl -X POST http://localhost:8080/api/sequence/find-motif \
+  -H "Content-Type: application/json" \
+  -d '{"sequence": "ATCGATCG", "motif": "ATC"}'
+```
+
+```bash
+# Valid sequence but motif not found
+curl -X POST http://localhost:8080/api/sequence/find-motif \
+  -H "Content-Type: application/json" \
+  -d '{"sequence": "ATCGATCG", "motif": "GGG"}'
+```
+
+### Transform DNA to RNA
+
+```bash
+# Valid sequence
+curl -X POST http://localhost:8080/api/sequence/transform \
+  -H "Content-Type: application/json" \
+  -d '{"sequence": "ATCG"}'
+```
+
+```bash
+# Error case (invalid characters)
+curl -X POST http://localhost:8080/api/sequence/transform \
+  -H "Content-Type: application/json" \
+  -d '{"sequence": "ATCGX"}'
+```
+
+### Reverse Complement
+
+```bash
+# Valid sequence
+curl -X POST http://localhost:8080/api/sequence/reverse-complement \
+  -H "Content-Type: application/json" \
+  -d '{"sequence": "ATCG"}'
+```
+
+```bash
+# Error case (empty sequence)
+curl -X POST http://localhost:8080/api/sequence/reverse-complement \
+  -H "Content-Type: application/json" \
+  -d '{"sequence": ""}'
+```
+
+Note: All endpoints return JSON responses. Error responses will include an error message and status code.
 
 ## AI cooperation use cases:
 
@@ -116,75 +194,6 @@ Applied edit to:
 `src/main/kotlin/com/example/yota_pay/application/features/sequence_processing/service/SequenceValidationService.kt`
 
 Commit: 7381ebd fix: handle empty strings as invalid DNA sequences in SequenceValidationService
-
-## API Usage Examples
-
-### Validate DNA Sequence
-```bash
-# Valid sequence
-curl -X POST http://localhost:8080/api/sequence/validate \
-  -H "Content-Type: application/json" \
-  -d '{"sequence": "ATCG"}'
-
-# Invalid sequence (contains invalid characters)
-curl -X POST http://localhost:8080/api/sequence/validate \
-  -H "Content-Type: application/json" \
-  -d '{"sequence": "ATCGX"}'
-```
-
-### Calculate GC Content
-```bash 
-# Valid sequence
-curl -X POST http://localhost:8080/api/sequence/gc-content \
-  -H "Content-Type: application/json" \
-  -d '{"sequence": "ATCGGC"}'
-
-# Error case (empty sequence)
-curl -X POST http://localhost:8080/api/sequence/gc-content \
-  -H "Content-Type: application/json" \
-  -d '{"sequence": ""}'
-```
-
-### Find Motif
-```bash
-# Valid sequence and motif
-curl -X POST http://localhost:8080/api/sequence/find-motif \
-  -H "Content-Type: application/json" \
-  -d '{"sequence": "ATCGATCG", "motif": "ATC"}'
-
-# Valid sequence but motif not found
-curl -X POST http://localhost:8080/api/sequence/find-motif \
-  -H "Content-Type: application/json" \
-  -d '{"sequence": "ATCGATCG", "motif": "GGG"}'
-```
-
-### Transform DNA to RNA
-```bash
-# Valid sequence
-curl -X POST http://localhost:8080/api/sequence/transform \
-  -H "Content-Type: application/json" \
-  -d '{"sequence": "ATCG"}'
-
-# Error case (invalid characters)
-curl -X POST http://localhost:8080/api/sequence/transform \
-  -H "Content-Type: application/json" \
-  -d '{"sequence": "ATCGX"}'
-```
-
-### Reverse Complement
-```bash
-# Valid sequence
-curl -X POST http://localhost:8080/api/sequence/reverse-complement \
-  -H "Content-Type: application/json" \
-  -d '{"sequence": "ATCG"}'
-
-# Error case (empty sequence)
-curl -X POST http://localhost:8080/api/sequence/reverse-complement \
-  -H "Content-Type: application/json" \
-  -d '{"sequence": ""}'
-```
-
-Note: All endpoints return JSON responses. Error responses will include an error message and status code.
 
 ### Refactoring
 
