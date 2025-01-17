@@ -10,10 +10,14 @@ import org.springframework.stereotype.Service
 @Service
 class GcContentService {
     fun calculateGcContent(request: GcContentRequest): Result<GcContentResponse> =
-        DnaSequence
-            .create(request.sequence)
-            .map { validSequence ->
-                val gcContent = validSequence.calculateContent(ContentOperation.gcSet)
-                GcContentResponse(gcContent)
-            }
+        runCatching {
+            val sequence =
+                DnaSequence
+                    .create(request.sequence)
+                    .getOrThrow()
+
+            val gcContent = sequence.calculateContent(ContentOperation.gcSet)
+            
+            GcContentResponse(gcContent)
+        }
 }
