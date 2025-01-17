@@ -22,104 +22,86 @@ class TransformSequenceIntegrationTests(
     @LocalServerPort private val port: Int,
 ) : BehaviorSpec({
 
-        beforeSpec {
-            RestAssured.requestSpecification =
-                RequestSpecBuilder()
-                    .setContentType(ContentType.JSON)
-                    .setBaseUri("http://localhost:$port")
-                    .build()
-        }
+    beforeSpec {
+        RestAssured.requestSpecification = RequestSpecBuilder()
+            .setContentType(ContentType.JSON)
+            .setBaseUri("http://localhost:$port")
+            .build()
+    }
 
-        given("transform endpoint") {
-            val endpoint = "/api/sequence/transform"
+    given("transform endpoint") {
+        val endpoint = "/api/sequence/transform"
 
-            `when`("transforming a valid DNA sequence to RNA") {
-                val request =
-                    TransformSequenceRequest(
-                        sequence = "ATGC",
-                    )
-
-                then("should return transformed RNA sequence") {
-                    val response =
-                        Given {
-                            body(request)
-                        } When {
-                            post(endpoint)
-                        } Then {
-                            statusCode(HttpStatus.OK.value())
-                        } Extract {
-                            `as`(TransformSequenceResponse::class.java)
-                        }
-
-                    response.rnaSequence shouldBe "AUGC"
+        `when`("transforming valid DNA sequence to RNA") {
+            val request = TransformSequenceRequest("ATGC")
+            
+            then("should return transformed RNA sequence") {
+                val response = Given {
+                    body(request)
+                } When {
+                    post(endpoint)
+                } Then {
+                    statusCode(HttpStatus.OK.value())
+                } Extract {
+                    `as`(TransformSequenceResponse::class.java)
                 }
-            }
 
-            `when`("transforming a DNA sequence with multiple T nucleotides") {
-                val request =
-                    TransformSequenceRequest(
-                        sequence = "TTTACGT",
-                    )
-
-                then("should replace all T with U") {
-                    val response =
-                        Given {
-                            body(request)
-                        } When {
-                            post(endpoint)
-                        } Then {
-                            statusCode(HttpStatus.OK.value())
-                        } Extract {
-                            `as`(TransformSequenceResponse::class.java)
-                        }
-
-                    response.rnaSequence shouldBe "UUUACGU"
-                }
-            }
-
-            `when`("transforming with empty sequence") {
-                val request =
-                    TransformSequenceRequest(
-                        sequence = "",
-                    )
-
-                then("should return bad request") {
-                    val response =
-                        Given {
-                            body(request)
-                        } When {
-                            post(endpoint)
-                        } Then {
-                            statusCode(HttpStatus.BAD_REQUEST.value())
-                        } Extract {
-                            `as`(ErrorResponse::class.java)
-                        }
-
-                    response.errors.first().detail shouldBe "Sequence must not be blank"
-                }
-            }
-
-            `when`("transforming with invalid DNA sequence") {
-                val request =
-                    TransformSequenceRequest(
-                        sequence = "ATXGC",
-                    )
-
-                then("should return bad request") {
-                    val response =
-                        Given {
-                            body(request)
-                        } When {
-                            post(endpoint)
-                        } Then {
-                            statusCode(HttpStatus.BAD_REQUEST.value())
-                            log().all()
-                        } Extract {
-                            `as`(ErrorResponse::class.java)
-                        }
-
-                    response.errors.first().detail shouldBe SequenceError.InvalidDnaSequence().message
-                }
+                response.rnaSequence shouldBe "AUGC"
             }
         }
-    })
+
+        `when`("transforming DNA sequence with multiple T nucleotides") {
+            val request = TransformSequenceRequest("TTTACGT")
+            
+            then("should replace all T with U") {
+                val response = Given {
+                    body(request)
+                } When {
+                    post(endpoint)
+                } Then {
+                    statusCode(HttpStatus.OK.value())
+                } Extract {
+                    `as`(TransformSequenceResponse::class.java)
+                }
+
+                response.rnaSequence shouldBe "UUUACGU"
+            }
+        }
+
+        `when`("transforming with empty sequence") {
+            val request = TransformSequenceRequest("")
+            
+            then("should return bad request") {
+                val response = Given {
+                    body(request)
+                } When {
+                    post(endpoint)
+                } Then {
+                    statusCode(HttpStatus.BAD_REQUEST.value())
+                } Extract {
+                    `as`(ErrorResponse::class.java)
+                }
+
+                response.errors.first().detail shouldBe "Sequence must not be blank"
+            }
+        }
+
+        `when`("transforming with invalid DNA sequence") {
+            val request = TransformSequenceRequest("ATXGC")
+            
+            then("should return bad request") {
+                val response = Given {
+                    body(request)
+                } When {
+                    post(endpoint)
+                } Then {
+                    statusCode(HttpStatus.BAD_REQUEST.value())
+                } Extract {
+                    `as`(ErrorResponse::class.java)
+                }
+
+                response.errors.first().detail shouldBe SequenceError.InvalidDnaSequence().message
+            }
+        }
+    }
+})
