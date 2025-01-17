@@ -3,8 +3,12 @@ package com.example.yota_pay.application.features.sequence_processing.domain.dna
 import com.example.yota_pay.application.features.sequence_processing.domain.SequenceError
 
 /**
- * Represents a valid DNA sequence.
- * Ensures sequence contains only valid nucleotides (A, T, C, G).
+ * Represents a valid DNA sequence containing only A, T, C, G characters.
+ *
+ * Uses a factory method pattern with Result type for type-safe initialization:
+ * - Constructor is private to enforce validation
+ * - create() method returns Result<DnaSequence> instead of throwing exceptions
+ * - Ensures all instances are valid by construction
  */
 @JvmInline
 value class DnaSequence private constructor(

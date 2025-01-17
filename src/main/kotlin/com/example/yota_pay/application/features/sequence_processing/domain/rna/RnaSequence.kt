@@ -9,8 +9,6 @@ import com.example.yota_pay.application.features.sequence_processing.domain.Sequ
  * - Constructor is private to enforce validation
  * - create() method returns Result<RnaSequence> instead of throwing exceptions
  * - Ensures all instances are valid by construction
- * - Provides clear error handling through Result type
- * - Maintains immutability and value semantics
  */
 @JvmInline
 value class RnaSequence private constructor(

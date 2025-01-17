@@ -60,7 +60,7 @@ class SequenceProcessingController(
     fun findMotif(
         @Valid @RequestBody request: FindMotifRequest,
     ): ResponseEntity<*> =
-        findMotifService.execute(request).fold(
+        findMotifService.findMotif(request).fold(
             onSuccess = { ResponseEntity.ok(it) },
             onFailure = { ResponseEntity.status(HttpStatus.BAD_REQUEST).body(it.message) },
         )

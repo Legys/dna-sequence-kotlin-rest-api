@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class FindMotifService {
-    fun execute(request: FindMotifRequest): Result<FindMotifResponse> =
+    fun findMotif(request: FindMotifRequest): Result<FindMotifResponse> =
         runCatching {
             val sequence = DnaSequence.create(request.sequence).getOrThrow()
             val indices = sequence.findMotif(request.motif).getOrThrow()

@@ -11,6 +11,13 @@ package com.example.yota_pay.application.features.sequence_processing.domain.dna
 object ContentOperation {
     val gcSet = setOf('G', 'C')
 
+    /**
+     * Calculates the proportion of specified nucleotides in a DNA sequence.
+     *
+     * @param nucleotides Set of nucleotide characters to count (e.g. setOf('G', 'C') for GC content)
+     * @return The proportion of specified nucleotides as a decimal between 0.0 and 1.0
+     *         Returns 0.0 if sequence is empty
+     */
     fun DnaSequence.calculateContent(nucleotides: Set<Char>): Double {
         val nucleotidesCount = value.count { it in nucleotides }
         val totalLength = value.length
