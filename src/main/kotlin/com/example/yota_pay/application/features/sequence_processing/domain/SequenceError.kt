@@ -14,8 +14,4 @@ sealed class SequenceError(
     data class EmptySequence(
         override val message: String = "Sequence cannot be empty",
     ) : SequenceError(message)
-
-    data class UnknownError(
-        override val message: String = "Unknown error occurred",
-    ) : SequenceError(message)
 }

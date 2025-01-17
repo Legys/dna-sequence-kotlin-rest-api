@@ -30,6 +30,7 @@ src/kotlin/com/wordy_app/wordy/application/features/
 Nuances:
 
 Prefer to use BehaviorSpec and Kotest matchers.
-Integration tests do HTTP calls using RestAssured.
+Integration tests do HTTP calls using RestAssured Kotlin DSL
+with Extract and Kotest matchers.
 There are handy extensions in the `extensions` package of the test project.
 
