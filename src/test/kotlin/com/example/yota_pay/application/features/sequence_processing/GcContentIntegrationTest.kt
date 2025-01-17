@@ -107,7 +107,7 @@ class GcContentIntegrationTest(
                     post("/api/sequence/gc-content")
                 } Then {
                     statusCode(400)
-                    body("message", equalTo(SequenceError.InvalidSequence().message))
+                    body("message", equalTo(SequenceError.InvalidDnaSequence().message))
                 }
             }
 
@@ -119,7 +119,7 @@ class GcContentIntegrationTest(
                     post("/api/sequence/gc-content")
                 } Then {
                     statusCode(400)
-                    body("message", equalTo(SequenceError.InvalidSequence().message))
+                    body("message", equalTo(SequenceError.InvalidDnaSequence().message))
                 }
             }
 
@@ -131,7 +131,7 @@ class GcContentIntegrationTest(
                     post("/api/sequence/gc-content")
                 } Then {
                     statusCode(400)
-                    body("message", equalTo(SequenceError.InvalidSequence().message))
+                    body("message", equalTo(SequenceError.InvalidDnaSequence().message))
                 }
             }
         }
