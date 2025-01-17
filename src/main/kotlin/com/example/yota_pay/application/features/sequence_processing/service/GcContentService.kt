@@ -1,5 +1,6 @@
 package com.example.yota_pay.application.features.sequence_processing.service
 
+import com.example.yota_pay.application.features.sequence_processing.domain.dna.ContentOperation
 import com.example.yota_pay.application.features.sequence_processing.domain.dna.ContentOperation.calculateContent
 import com.example.yota_pay.application.features.sequence_processing.domain.dna.DnaSequence
 import com.example.yota_pay.application.features.sequence_processing.request.GcContentRequest
@@ -12,7 +13,7 @@ class GcContentService {
         DnaSequence
             .create(request.sequence)
             .map { validSequence ->
-                val gcContent = validSequence.calculateContent()
+                val gcContent = validSequence.calculateContent(ContentOperation.gcSet)
                 GcContentResponse(gcContent)
             }
 }
