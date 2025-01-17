@@ -1,7 +1,7 @@
 package com.example.yota_pay.application.features.sequence_processing.service
 
-import com.example.yota_pay.application.features.sequence_processing.domain.DnaSequence
-import com.example.yota_pay.application.features.sequence_processing.domain.GcContentCalculator
+import com.example.yota_pay.application.features.sequence_processing.domain.dna.ContentOperation.calculateContent
+import com.example.yota_pay.application.features.sequence_processing.domain.dna.DnaSequence
 import com.example.yota_pay.application.features.sequence_processing.request.GcContentRequest
 import com.example.yota_pay.application.features.sequence_processing.response.GcContentResponse
 import org.springframework.stereotype.Service
@@ -12,7 +12,7 @@ class GcContentService {
         DnaSequence
             .create(request.sequence)
             .map { validSequence ->
-                val gcContent = GcContentCalculator.calculateGcContent(validSequence)
+                val gcContent = validSequence.calculateContent()
                 GcContentResponse(gcContent)
             }
 }
