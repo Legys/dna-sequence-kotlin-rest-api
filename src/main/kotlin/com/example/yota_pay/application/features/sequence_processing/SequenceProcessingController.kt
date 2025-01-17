@@ -3,10 +3,12 @@ package com.example.yota_pay.application.features.sequence_processing
 import com.example.yota_pay.application.features.sequence_processing.request.FindMotifRequest
 import com.example.yota_pay.application.features.sequence_processing.request.GcContentRequest
 import com.example.yota_pay.application.features.sequence_processing.request.SequenceValidationRequest
+import com.example.yota_pay.application.features.sequence_processing.request.TransformSequenceRequest
 import com.example.yota_pay.application.features.sequence_processing.response.SequenceValidationResponse
 import com.example.yota_pay.application.features.sequence_processing.service.FindMotifService
 import com.example.yota_pay.application.features.sequence_processing.service.GcContentService
 import com.example.yota_pay.application.features.sequence_processing.service.SequenceValidationService
+import com.example.yota_pay.application.features.sequence_processing.service.TransformSequenceService
 import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -21,6 +23,7 @@ class SequenceProcessingController(
     private val sequenceValidationService: SequenceValidationService,
     private val gcContentService: GcContentService,
     private val findMotifService: FindMotifService,
+    private val transformSequenceService: TransformSequenceService,
 ) {
     @PostMapping("/validate")
     fun validateSequence(
@@ -55,6 +58,15 @@ class SequenceProcessingController(
         @Valid @RequestBody request: FindMotifRequest,
     ): ResponseEntity<*> =
         findMotifService.execute(request).fold(
+            onSuccess = { ResponseEntity.ok(it) },
+            onFailure = { ResponseEntity.status(HttpStatus.BAD_REQUEST).body(it.message) },
+        )
+
+    @PostMapping("/transform")
+    fun transformSequence(
+        @Valid @RequestBody request: TransformSequenceRequest,
+    ): ResponseEntity<*> =
+        transformSequenceService.execute(request).fold(
             onSuccess = { ResponseEntity.ok(it) },
             onFailure = { ResponseEntity.status(HttpStatus.BAD_REQUEST).body(it.message) },
         )
