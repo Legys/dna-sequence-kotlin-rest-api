@@ -12,6 +12,6 @@ class TransformSequenceService {
         DnaSequence
             .create(request.sequence)
             .map { sequence ->
-                TransformSequenceResponse(sequence.toRna(request.sequence).getOrThrow())
+                TransformSequenceResponse(sequence.toRna())
             }
 } 
