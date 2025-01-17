@@ -9,9 +9,14 @@ import org.springframework.stereotype.Service
 @Service
 class TransformSequenceService {
     fun execute(request: TransformSequenceRequest): Result<TransformSequenceResponse> =
-        DnaSequence
-            .create(request.sequence)
-            .map { sequence ->
-                TransformSequenceResponse(sequence.toRna())
-            }
+        runCatching {
+            val sequence =
+                DnaSequence
+                    .create(request.sequence)
+                    .getOrThrow()
+
+            val rnaSequence = sequence.toRna().getOrThrow()
+
+            TransformSequenceResponse(rnaSequence.toString())
+        }
 } 

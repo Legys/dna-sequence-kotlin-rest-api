@@ -1,9 +1,10 @@
 package com.example.yota_pay.application.features.sequence_processing.domain.dna
 
+import com.example.yota_pay.application.features.sequence_processing.domain.rna.RnaSequence
+
 object TransformOperation {
-    fun DnaSequence.toRna(): String {
+    fun DnaSequence.toRna(): Result<RnaSequence> {
         val transformed = value.replace('T', 'U')
-//        return DnaSequence.create(transformed).getOrThrow()
-        return transformed
+        return RnaSequence.create(transformed)
     }
 } 
