@@ -1,4 +1,4 @@
-package com.example.yota_pay.application.features.sequence_processing
+package com.example.yota_pay.application.features.sequence_processing.integration
 
 import com.example.yota_pay.application.features.sequence_processing.request.SequenceValidationRequest
 import com.example.yota_pay.application.features.sequence_processing.response.SequenceValidationResponse
@@ -13,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class SequenceProcessingIntegrationTest(
+class SequenceValidationIntegrationTests(
     @LocalServerPort val port: Int,
 ) : BehaviorSpec({
 
@@ -61,20 +61,19 @@ class SequenceProcessingIntegrationTest(
             }
         }
 
-  
-
         given("a request with invalid characters") {
             `when`("POST /api/sequence/validate is called") {
-                val response = Given {
-                    contentType("application/json")
-                    body(SequenceValidationRequest("1234"))
-                } When {
-                    post("/api/sequence/validate")
-                } Then {
-                    statusCode(200)
-                } Extract {
-                    `as`(SequenceValidationResponse::class.java)
-                }
+                val response =
+                    Given {
+                        contentType("application/json")
+                        body(SequenceValidationRequest("1234"))
+                    } When {
+                        post("/api/sequence/validate")
+                    } Then {
+                        statusCode(200)
+                    } Extract {
+                        `as`(SequenceValidationResponse::class.java)
+                    }
 
                 then("should return valid false") {
                     response.valid shouldBe false
@@ -84,16 +83,17 @@ class SequenceProcessingIntegrationTest(
 
         given("a request with whitespace") {
             `when`("POST /api/sequence/validate is called") {
-                val response = Given {
-                    contentType("application/json")
-                    body(SequenceValidationRequest("ATCG "))
-                } When {
-                    post("/api/sequence/validate")
-                } Then {
-                    statusCode(200)
-                } Extract {
-                    `as`(SequenceValidationResponse::class.java)
-                }
+                val response =
+                    Given {
+                        contentType("application/json")
+                        body(SequenceValidationRequest("ATCG "))
+                    } When {
+                        post("/api/sequence/validate")
+                    } Then {
+                        statusCode(200)
+                    } Extract {
+                        `as`(SequenceValidationResponse::class.java)
+                    }
 
                 then("should return error") {
                     response.valid shouldBe false
@@ -101,16 +101,16 @@ class SequenceProcessingIntegrationTest(
             }
         }
 
-    given("an empty sequence request") {
-        `when`("POST /api/sequence/validate is called") {
-            Given {
-                contentType("application/json")
-                body(SequenceValidationRequest(""))
-            } When {
-                post("/api/sequence/validate")
-            } Then {
-                statusCode(400)
+        given("an empty sequence request") {
+            `when`("POST /api/sequence/validate is called") {
+                Given {
+                    contentType("application/json")
+                    body(SequenceValidationRequest(""))
+                } When {
+                    post("/api/sequence/validate")
+                } Then {
+                    statusCode(400)
+                }
             }
         }
-    }
     })

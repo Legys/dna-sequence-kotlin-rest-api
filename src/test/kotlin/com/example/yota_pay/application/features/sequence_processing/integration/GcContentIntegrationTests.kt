@@ -1,4 +1,4 @@
-package com.example.yota_pay.application.features.sequence_processing
+package com.example.yota_pay.application.features.sequence_processing.integration
 
 import com.example.yota_pay.application.features.sequence_processing.domain.SequenceError
 import com.example.yota_pay.application.features.sequence_processing.request.GcContentRequest
@@ -16,7 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class GcContentIntegrationTest(
+class GcContentIntegrationTests(
     @LocalServerPort val port: Int,
 ) : BehaviorSpec({
 

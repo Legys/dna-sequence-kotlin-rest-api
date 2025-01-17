@@ -1,6 +1,5 @@
-package com.example.yota_pay.application.features.sequence_processing.domain
+package com.example.yota_pay.application.features.sequence_processing.domain.dna
 
-import com.example.yota_pay.application.features.sequence_processing.domain.dna.DnaSequence
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 
